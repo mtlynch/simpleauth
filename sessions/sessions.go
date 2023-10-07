@@ -2,8 +2,12 @@ package sessions
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"net/http"
+
+	"github.com/mtlynch/jeff"
+	"github.com/mtlynch/jeff/sqlite"
 )
 
 type (
@@ -25,6 +29,23 @@ type (
 )
 
 var ErrNoSessionFound = errors.New("no active session in request context")
+
+func New(dbPath string) (Manager, error) {
+	db, err := sql.Open("sqlite3", dbPath)
+	if err != nil {
+		return manager{}, err
+	}
+	store, err := sqlite.New(db)
+	if err != nil {
+		return manager{}, err
+	}
+	options := []func(*jeff.Jeff){jeff.CookieName("token")}
+	options = append(options, extraOptions()...)
+	j := jeff.New(store, options...)
+	return manager{
+		j: j,
+	}, nil
+}
 
 func KeyFromBytes(b []byte) Key {
 	return Key{

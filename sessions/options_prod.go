@@ -1,11 +1,9 @@
-//go:build dev
+//go:build !dev
 
-package jeff
+package sessions
 
 import "github.com/mtlynch/jeff"
 
 func extraOptions() []func(*jeff.Jeff) {
-	return []func(*jeff.Jeff){
-		jeff.Insecure,
-	}
+	return []func(*jeff.Jeff){}
 }
