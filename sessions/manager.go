@@ -2,14 +2,29 @@ package sessions
 
 import (
 	"context"
+	"database/sql"
 	"log"
 	"net/http"
 
 	"github.com/mtlynch/jeff"
+	jeff_sqlite "github.com/mtlynch/jeff/sqlite"
 )
 
 type Manager struct {
 	j *jeff.Jeff
+}
+
+func NewManager(sqliteDB *sql.DB) (Manager, error) {
+	store, err := jeff_sqlite.New(sqliteDB)
+	if err != nil {
+		return Manager{}, err
+	}
+	options := []func(*jeff.Jeff){jeff.CookieName("token")}
+	options = append(options, extraOptions()...)
+	j := jeff.New(store, options...)
+	return Manager{
+		j: j,
+	}, nil
 }
 
 func (m Manager) CreateSession(w http.ResponseWriter, ctx context.Context, key Key, session Session) error {
