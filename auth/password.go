@@ -1,39 +1,12 @@
 package auth
 
 import (
-	"errors"
-
 	"golang.org/x/crypto/bcrypt"
 )
 
-type (
-	Authenticator interface {
-		Authenticate(username, password string) error
-	}
-
-	PasswordHash interface {
-		MatchesPlaintext(string) bool
-		Bytes() []byte
-	}
-
-	AuthStore interface {
-		ReadPasswordHash(username string) (PasswordHash, error)
-	}
-
-	authenticator struct {
-		store AuthStore
-	}
-)
-
-var (
-	ErrUserNotFound      = errors.New("user not found")
-	ErrIncorrectPassword = errors.New("password does not match stored hash")
-)
-
-func New(store AuthStore) Authenticator {
-	return authenticator{
-		store: store,
-	}
+type PasswordHash interface {
+	MatchesPlaintext(string) bool
+	Bytes() []byte
 }
 
 // Hash a plaintext password into a secure password hash.
