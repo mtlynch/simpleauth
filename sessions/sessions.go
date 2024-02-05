@@ -5,7 +5,7 @@ import (
 	"errors"
 
 	"github.com/mtlynch/jeff"
-	"github.com/mtlynch/jeff/sqlite"
+	jeff_sqlite "github.com/mtlynch/jeff/sqlite"
 )
 
 type (
@@ -18,12 +18,8 @@ type (
 
 var ErrNoSessionFound = errors.New("no active session in request context")
 
-func New(dbPath string) (Manager, error) {
-	db, err := sql.Open("sqlite3", dbPath)
-	if err != nil {
-		return Manager{}, err
-	}
-	store, err := sqlite.New(db)
+func New(sqliteDB *sql.DB) (Manager, error) {
+	store, err := jeff_sqlite.New(sqliteDB)
 	if err != nil {
 		return Manager{}, err
 	}
