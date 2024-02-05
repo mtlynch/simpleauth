@@ -26,4 +26,4 @@ then
   rm -rf .git/hooks
 fi
 
-ln -s -f ../dev-scripts/git-hooks .git/hooks
+ln --symbolic --force ../dev-scripts/git-hooks .git/hooks
