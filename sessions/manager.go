@@ -10,21 +10,47 @@ import (
 	jeff_sqlite "github.com/mtlynch/jeff/sqlite"
 )
 
-type Manager struct {
-	j *jeff.Jeff
+type (
+	ManagerParams struct {
+		RequireTLS bool
+	}
+
+	Option func(*ManagerParams)
+
+	Manager struct {
+		j *jeff.Jeff
+	}
+)
+
+var defaultParams = ManagerParams{
+	RequireTLS: true,
 }
 
-func NewManager(sqliteDB *sql.DB) (Manager, error) {
+func NewManager(sqliteDB *sql.DB, options ...Option) (Manager, error) {
 	store, err := jeff_sqlite.New(sqliteDB)
 	if err != nil {
 		return Manager{}, err
 	}
-	options := []func(*jeff.Jeff){jeff.CookieName("token")}
-	options = append(options, extraOptions()...)
-	j := jeff.New(store, options...)
+	params := defaultParams
+	for _, o := range options {
+		o(&params)
+	}
+	jeff_opts := []func(*jeff.Jeff){jeff.CookieName("token")}
+	if !params.RequireTLS {
+		jeff_opts = append(jeff_opts, jeff.Insecure)
+	}
+	j := jeff.New(store, jeff_opts...)
 	return Manager{
 		j: j,
 	}, nil
+}
+
+// AllowNonTlsConnections allows non-TLS connections for a session, removing the
+// Secure attribute from session cookies.
+func AllowNonTlsConnections() func(p *ManagerParams) {
+	return func(p *ManagerParams) {
+		p.RequireTLS = false
+	}
 }
 
 func (m Manager) CreateSession(w http.ResponseWriter, ctx context.Context, key Key, session Session) error {
