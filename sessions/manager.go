@@ -18,8 +18,7 @@ type (
 	Option func(*ManagerParams)
 
 	Manager struct {
-		j      *jeff.Jeff
-		params *ManagerParams
+		j *jeff.Jeff
 	}
 )
 
@@ -32,13 +31,26 @@ func NewManager(sqliteDB *sql.DB, options ...Option) (Manager, error) {
 	if err != nil {
 		return Manager{}, err
 	}
+	params := defaultParams
+	for _, o := range options {
+		o(&params)
+	}
 	jeff_opts := []func(*jeff.Jeff){jeff.CookieName("token")}
-
-	jeff_opts = append(jeff_opts, extraOptions()...)
+	if !params.RequireTLS {
+		jeff_opts = append(jeff_opts, jeff.Insecure)
+	}
 	j := jeff.New(store, jeff_opts...)
 	return Manager{
 		j: j,
 	}, nil
+}
+
+// AllowNonTlsConnections allows non-TLS connections for a session, removing the
+// Secure attribute from session cookies.
+func AllowNonTlsConnections() func(p *ManagerParams) {
+	return func(p *ManagerParams) {
+		p.RequireTLS = false
+	}
 }
 
 func (m Manager) CreateSession(w http.ResponseWriter, ctx context.Context, key Key, session Session) error {
