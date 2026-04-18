@@ -11,8 +11,6 @@ import (
 	"github.com/mtlynch/simpleauth/v3/sessions"
 )
 
-var fixedNow = time.Date(2025, 1, 1, 12, 0, 0, 0, time.UTC)
-
 type memorySessionStore struct {
 	sessions map[string]sessions.Session
 }
@@ -53,7 +51,7 @@ func TestCreateAndLoadSession(t *testing.T) {
 		Store:      store,
 		CookieName: "token",
 		RequireTLS: false,
-		Now:        func() time.Time { return fixedNow },
+		Now:        func() time.Time { return time.Date(2025, 1, 1, 12, 0, 0, 0, time.UTC) },
 	})
 	userID, err := simpleauth.NewUserID("123")
 	if err != nil {
@@ -99,7 +97,7 @@ func TestRequireSessionRedirectsWithoutSession(t *testing.T) {
 		Store:      store,
 		CookieName: "token",
 		RequireTLS: false,
-		Now:        func() time.Time { return fixedNow },
+		Now:        func() time.Time { return time.Date(2025, 1, 1, 12, 0, 0, 0, time.UTC) },
 	})
 	rec := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodGet, "/", nil)

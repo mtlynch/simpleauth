@@ -12,8 +12,6 @@ import (
 	"github.com/mtlynch/simpleauth/v3/sessions"
 )
 
-var fixedNow = time.Date(2025, 1, 1, 12, 0, 0, 0, time.UTC)
-
 type memoryMagicLinkStore struct {
 	entries map[string]magiclink.Entry
 }
@@ -136,11 +134,11 @@ func TestCreateLoginLinkAndConfirmLogin(t *testing.T) {
 		SessionManager: sessions.NewManager(sessions.Config{
 			Store:      &memorySessionStore{sessions: map[string]sessions.Session{}},
 			CookieName: "token",
-			Now:        func() time.Time { return fixedNow },
+			Now:        func() time.Time { return time.Date(2025, 1, 1, 12, 0, 0, 0, time.UTC) },
 		}),
 		ConfirmURL:    "/login/confirm",
 		TokenLifetime: 30 * time.Minute,
-		Now:           func() time.Time { return fixedNow },
+		Now:           func() time.Time { return time.Date(2025, 1, 1, 12, 0, 0, 0, time.UTC) },
 	})
 
 	loginLink, err := authenticator.CreateLoginLink(
@@ -193,10 +191,10 @@ func TestCreateLoginLinkForUnknownUser(t *testing.T) {
 		SessionManager: sessions.NewManager(sessions.Config{
 			Store:      &memorySessionStore{sessions: map[string]sessions.Session{}},
 			CookieName: "token",
-			Now:        func() time.Time { return fixedNow },
+			Now:        func() time.Time { return time.Date(2025, 1, 1, 12, 0, 0, 0, time.UTC) },
 		}),
 		ConfirmURL: "/login/confirm",
-		Now:        func() time.Time { return fixedNow },
+		Now:        func() time.Time { return time.Date(2025, 1, 1, 12, 0, 0, 0, time.UTC) },
 	})
 
 	_, err = authenticator.CreateLoginLink(context.Background(), "nobody@example.com")
@@ -222,11 +220,11 @@ func TestRequestLoginLinkHonorsRateLimit(t *testing.T) {
 		SessionManager: sessions.NewManager(sessions.Config{
 			Store:      &memorySessionStore{sessions: map[string]sessions.Session{}},
 			CookieName: "token",
-			Now:        func() time.Time { return fixedNow },
+			Now:        func() time.Time { return time.Date(2025, 1, 1, 12, 0, 0, 0, time.UTC) },
 		}),
 		ConfirmURL: "/login/confirm",
 		RateLimit:  1,
-		Now:        func() time.Time { return fixedNow },
+		Now:        func() time.Time { return time.Date(2025, 1, 1, 12, 0, 0, 0, time.UTC) },
 	})
 	_, err = authenticator.CreateLoginLink(context.Background(), "homer@example.com")
 	if err != nil {

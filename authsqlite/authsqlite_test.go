@@ -15,8 +15,6 @@ import (
 	_ "github.com/ncruces/go-sqlite3/embed"
 )
 
-var fixedNow = time.Date(2025, 1, 1, 12, 0, 0, 0, time.UTC)
-
 func TestSessionStore(t *testing.T) {
 	db := newDB(t)
 	createSessionTables(t, db)
@@ -30,7 +28,7 @@ func TestSessionStore(t *testing.T) {
 		ID:          sessionID,
 		UserID:      userID,
 		SessionData: []byte(`{"userId":123}`),
-		CreatedAt:   fixedNow,
+		CreatedAt:   time.Date(2025, 1, 1, 12, 0, 0, 0, time.UTC),
 	}); err != nil {
 		t.Fatalf("creating session: %v", err)
 	}
@@ -67,8 +65,8 @@ func TestMagicLinkStore(t *testing.T) {
 	if err := store.CreateToken(context.Background(), magiclink.Entry{
 		Token:     token,
 		UserID:    userID,
-		CreatedAt: fixedNow,
-		ExpiresAt: fixedNow.Add(30 * time.Minute),
+		CreatedAt: time.Date(2025, 1, 1, 12, 0, 0, 0, time.UTC),
+		ExpiresAt: time.Date(2025, 1, 1, 12, 0, 0, 0, time.UTC).Add(30 * time.Minute),
 	}); err != nil {
 		t.Fatalf("creating token: %v", err)
 	}
@@ -76,7 +74,7 @@ func TestMagicLinkStore(t *testing.T) {
 	count, err := store.CountTokensSince(
 		context.Background(),
 		userID,
-		fixedNow.Add(-1*time.Hour),
+		time.Date(2025, 1, 1, 12, 0, 0, 0, time.UTC).Add(-1*time.Hour),
 	)
 	if err != nil {
 		t.Fatalf("counting tokens: %v", err)
@@ -85,7 +83,11 @@ func TestMagicLinkStore(t *testing.T) {
 		t.Errorf("count=%v, want %v", got, want)
 	}
 
-	consumedUserID, err := store.ConsumeToken(context.Background(), token, fixedNow)
+	consumedUserID, err := store.ConsumeToken(
+		context.Background(),
+		token,
+		time.Date(2025, 1, 1, 12, 0, 0, 0, time.UTC),
+	)
 	if err != nil {
 		t.Fatalf("consuming token: %v", err)
 	}
@@ -93,7 +95,11 @@ func TestMagicLinkStore(t *testing.T) {
 		t.Errorf("consumedUserID=%v, want %v", got, want)
 	}
 
-	_, err = store.ConsumeToken(context.Background(), token, fixedNow)
+	_, err = store.ConsumeToken(
+		context.Background(),
+		token,
+		time.Date(2025, 1, 1, 12, 0, 0, 0, time.UTC),
+	)
 	if got, want := err, magiclink.ErrUsedToken; got != want {
 		t.Errorf("err=%v, want %v", got, want)
 	}
