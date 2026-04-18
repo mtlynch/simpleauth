@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/mtlynch/simpleauth/v3"
-	"github.com/mtlynch/simpleauth/v3/sessions"
 )
 
 const (
@@ -49,12 +48,17 @@ type Store interface {
 	) (int, error)
 }
 
+// SessionManager creates authenticated browser sessions.
+type SessionManager interface {
+	CreateSession(context.Context, http.ResponseWriter, simpleauth.User) error
+}
+
 // Config controls magic-link authentication.
 type Config struct {
 	Store          Store
 	Users          simpleauth.UserStore
 	LinkSender     simpleauth.LoginLinkSender
-	SessionManager sessions.Manager
+	SessionManager SessionManager
 	ConfirmURL     string
 	TokenLifetime  time.Duration
 	RateLimit      int
@@ -67,7 +71,7 @@ type Authenticator struct {
 	store          Store
 	users          simpleauth.UserStore
 	linkSender     simpleauth.LoginLinkSender
-	sessionManager sessions.Manager
+	sessionManager SessionManager
 	confirmURL     string
 	tokenLifetime  time.Duration
 	rateLimit      int
@@ -118,6 +122,9 @@ func New(config Config) Authenticator {
 	}
 	if config.Users == nil {
 		panic("magic-link authenticator requires users")
+	}
+	if config.SessionManager == nil {
+		panic("magic-link authenticator requires a session manager")
 	}
 	if config.Now == nil {
 		panic("magic-link authenticator requires a clock")
