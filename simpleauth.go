@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 )
 
 // UserID is the stable user identifier that simpleauth stores in auth
@@ -35,17 +34,6 @@ type User struct {
 	SessionData json.RawMessage
 	Email       string
 	Name        string
-}
-
-// Validate verifies that the user has the fields required for authentication.
-func (u User) Validate() error {
-	if u.ID.String() == "" {
-		return errors.New("user ID must not be empty")
-	}
-	if u.Email == "" {
-		return fmt.Errorf("email must not be empty for user %s", u.ID)
-	}
-	return nil
 }
 
 // UserStore looks up users for authentication.

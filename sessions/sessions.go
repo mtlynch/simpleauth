@@ -113,9 +113,6 @@ func (m Manager) CreateSession(
 	w http.ResponseWriter,
 	user simpleauth.User,
 ) error {
-	if err := user.Validate(); err != nil {
-		return err
-	}
 	id, err := newID()
 	if err != nil {
 		return err

@@ -221,9 +221,6 @@ func (a Authenticator) createLoginLink(
 		}
 		return "", simpleauth.User{}, fmt.Errorf("find user by email: %w", err)
 	}
-	if err := user.Validate(); err != nil {
-		return "", simpleauth.User{}, err
-	}
 	count, err := a.store.CountTokensSince(
 		ctx,
 		user.ID,
