@@ -1,0 +1,45 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+bin/
+/app
+node_modules/
+
+# Vim temporary files
+*.sw?
+
+# Persistent data directory
+data/
+
+# Code coverage artifacts
+.coverage*
+
+# Environment variables, which may contain secrets
+.env.*
+# .env.example is an exception as it only contains dummy secrets.
+!.env.example
+
+# Playwright output
+/playwright-report/
+/playwright/.cache/
+/e2e-results/
+
+/.direnv
+result*
+
+# Scratch directories for sharing data with AI agents.
+/reference
+/tmp
+
+# Temporary screenshots pasted into the root for AI agents.
+/image*.png
