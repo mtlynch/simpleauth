@@ -1,6 +1,6 @@
 # simpleauth
 
-[![CircleCI](https://circleci.com/gh/mtlynch/simpleauth.svg?style=svg)](https://circleci.com/gh/mtlynch/simpleauth)
+![CI Badge](https://nix-ci.com/badge/cb:mtlynch:simpleauth)
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/mtlynch/simpleauth)](https://github.com/mtlynch/simpleauth/commits/master)
 [![GitHub last commit](https://img.shields.io/github/last-commit/mtlynch/simpleauth)](https://github.com/mtlynch/simpleauth/commits/master)
 [![Contributors](https://img.shields.io/github/contributors/mtlynch/simpleauth)](https://github.com/mtlynch/simpleauth/graphs/contributors)
