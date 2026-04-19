@@ -1,13 +1,5 @@
-module github.com/mtlynch/simpleauth/v2
+module github.com/mtlynch/simpleauth/v3
 
-go 1.19
+go 1.21
 
-require (
-	github.com/mtlynch/jeff v0.2.4
-	golang.org/x/crypto v0.14.0
-)
-
-require (
-	github.com/philhofer/fwd v1.1.1 // indirect
-	github.com/tinylib/msgp v1.1.6 // indirect
-)
+require golang.org/x/crypto v0.32.0

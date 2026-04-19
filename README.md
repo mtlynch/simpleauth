@@ -11,5 +11,5 @@ A simple Go authentication and session management library for web apps.
 ## Install
 
 ```bash
-go get -u github.com/mtlynch/simpleauth/v2
+go get -u github.com/mtlynch/simpleauth/v3
 ```

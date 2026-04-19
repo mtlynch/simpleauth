@@ -5,7 +5,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/mtlynch/simpleauth/v2/auth"
+	"github.com/mtlynch/simpleauth/v3/auth"
 )
 
 type (
